@@ -1,7 +1,5 @@
 using Bms.Application;
 using BMS.Company.Data;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 

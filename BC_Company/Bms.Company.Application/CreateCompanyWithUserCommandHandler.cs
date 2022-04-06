@@ -2,6 +2,7 @@
 using BMS.Company.Data;
 using BMS.Company.Domain;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
@@ -48,6 +49,7 @@ public class CreateCompanyWithUserCommandHandler : IRequestHandler<CreateCompany
 
         // using convenience method
         User newUser = company.AddUser(createCommand.UserEmail);
+        _setPassword(newUser, createCommand);
 
         // could have done User user = new User(createCommand.UserEmail, company); company.addUser(User);
 
@@ -55,5 +57,11 @@ public class CreateCompanyWithUserCommandHandler : IRequestHandler<CreateCompany
         await _companyContext.SaveChangesAsync(cancellationToken);
 
         return CommandResponse<User>.Ok(newUser, "Successfully created user");
+    }
+
+    private static void _setPassword(User user, CreateCompanyWithUserCommand createCommand)
+    {
+        PasswordHasher<User> passwordHasher = new PasswordHasher<User>();
+        user.Password = passwordHasher.HashPassword(user, createCommand.UserPassword);
     }
 }

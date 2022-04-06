@@ -4,6 +4,7 @@ public class User : Entity
 {
     // allow to change email
     public string Email { get; set; }
+    public string Password { get; set; }
 
     // Do not allow to change company object to avoid data inconsistency, since Company also has a list of these users.
     // Alternatively, could make a setter body that navigates to current company and removes the user from its internal list.
