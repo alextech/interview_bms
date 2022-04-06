@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BMS.Company.Data.Migrations
 {
     [DbContext(typeof(CompanyContext))]
-    [Migration("20220406100530_UserPassword")]
-    partial class UserPassword
+    [Migration("20220406102906_Companies")]
+    partial class Companies
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -82,17 +82,12 @@ namespace BMS.Company.Data.Migrations
             modelBuilder.Entity("BMS.Company.Domain.User", b =>
                 {
                     b.HasOne("BMS.Company.Domain.Company", "Company")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("BMS.Company.Domain.Company", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

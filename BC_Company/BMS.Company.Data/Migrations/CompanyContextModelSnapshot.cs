@@ -80,17 +80,12 @@ namespace BMS.Company.Data.Migrations
             modelBuilder.Entity("BMS.Company.Domain.User", b =>
                 {
                     b.HasOne("BMS.Company.Domain.Company", "Company")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("BMS.Company.Domain.Company", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

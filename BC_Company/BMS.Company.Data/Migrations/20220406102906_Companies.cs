@@ -31,6 +31,7 @@ namespace BMS.Company.Data.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Email = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false),
                     CompanyId = table.Column<int>(type: "integer", nullable: false),
                     Guid = table.Column<Guid>(type: "uuid", nullable: false)
                 },

@@ -19,24 +19,34 @@ public class CreateCompanyWithUserCommandHandler : IRequestHandler<CreateCompany
 
     public async Task<CommandResponse<User>> Handle(CreateCompanyWithUserCommand createCommand, CancellationToken cancellationToken)
     {
-        // Alternatively, could create CompanyQuery in BMS.Comapny.Cmd, make handle for it, inject MediatR service, and query against it.
-        Company? company = await (
-            from c in _companyContext.Companies
-                .TagWith("CreateCompanyCommand: Fetch company to add user to, if it already exists")
-            where c.Name == createCommand.CompanyName
-            select c
-        ).SingleOrDefaultAsync(cancellationToken);
-
-        if (company == null)
+        // validation can go to FluentValidator and even be added to pipeline processing before getting here
+        if (createCommand.CompanyId == Guid.Empty)
         {
-            company = new Company(createCommand.CompanyName);
-            _companyContext.Add(company);
+            return CommandResponse<User>.Problem(null, $"Company has empty id.");
+        }
+        if (createCommand.UserId == Guid.Empty)
+        {
+            return CommandResponse<User>.Problem(null, $"User has empty id.");
+        }
+
+        bool companyExists = await (
+            from c in _companyContext.Companies
+                .TagWith("CreateCompanyCommand: Checking for existing company.")
+            where c.Guid == createCommand.CompanyId
+            select c
+        ).AnyAsync(cancellationToken);
+
+        if (companyExists)
+        {
+            return CommandResponse<User>.Problem(null,
+                $"Company with id {createCommand.CompanyId} already exists."
+            );
         }
 
         bool userExists = await (
             from u in _companyContext.Users
-                .TagWith("CreateCompanyCommand: Check if email already exists.")
-            where u.Email == createCommand.UserEmail
+                .TagWith("CreateCompanyCommand: Checking for existing user.")
+            where u.Guid == createCommand.UserId || u.Email == createCommand.UserEmail
             select u
         ).AnyAsync(cancellationToken);
 
@@ -47,13 +57,11 @@ public class CreateCompanyWithUserCommandHandler : IRequestHandler<CreateCompany
             );
         }
 
-        // using convenience method
-        User newUser = company.AddUser(createCommand.UserEmail);
+        Company newCompany = new Company(createCommand.CompanyId, createCommand.CompanyName);
+        User newUser = new User(createCommand.UserId, createCommand.UserEmail, newCompany);
         _setPassword(newUser, createCommand);
 
-        // could have done User user = new User(createCommand.UserEmail, company); company.addUser(User);
-
-        // hoping one day can tag insert statements too: https://github.com/dotnet/efcore/issues/14078
+        await _companyContext.AddRangeAsync(newCompany, newUser);
         await _companyContext.SaveChangesAsync(cancellationToken);
 
         return CommandResponse<User>.Ok(newUser, "Successfully created user");

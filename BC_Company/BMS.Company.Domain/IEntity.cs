@@ -10,7 +10,7 @@ public interface IEntity
 
 public class Entity : IEntity
 {
-    public Guid Guid { get; protected init; } = Guid.NewGuid();
+    public Guid Guid { get; protected set; } = Guid.Empty;
     public override bool Equals(object? obj)
     {
         return (obj as IEntity)?.Guid == Guid;
