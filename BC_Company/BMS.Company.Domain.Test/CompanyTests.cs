@@ -26,5 +26,8 @@ public class CompanyTests
         Assert.That(company.Users, Has.Exactly(2).Items);
         Assert.That(company.Users, Contains.Item(user1));
         Assert.That(company.Users, Contains.Item(user2));
+
+        Assert.NotNull(user1.Company);
+        Assert.AreEqual(user1.Company, company);
     }
 }

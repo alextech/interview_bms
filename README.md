@@ -12,3 +12,8 @@ into consuming clients
 This is especially useful in Blazor, or anywhere else that runs C# on both client and server.
 
 This way, client can generate commands and queries in a type-compatible format with the server.
+
+### EfCore connection
+```
+dotnet ef database update --project BC_Company/BMS.Company.Data --startup-project BMS.Api --context CompanyContext
+```

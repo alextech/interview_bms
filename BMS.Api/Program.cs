@@ -1,7 +1,9 @@
+using BMS.Company.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -11,7 +13,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+builder.Services.AddDbContext<CompanyContext>(
+    options => options
+        .UseNpgsql(
+            builder.Configuration.GetConnectionString("InterviewConnection"),
+            srv => srv.MigrationsHistoryTable("__BmsMigrationsHistory")
+        ),
+    ServiceLifetime.Scoped
+);
+
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
