@@ -27,7 +27,6 @@ namespace SharedKernel
         public bool Success { get; }
         public string Description { get; }
 
-        // [JsonConstructor]
         protected CommandResponse(bool success, string description)
         {
             Success = success;
@@ -47,10 +46,9 @@ namespace SharedKernel
 
     public class CommandResponse<T> : CommandResponse
     {
-        public T Data { get; }
+        public T? Data { get; }
 
-        // [JsonConstructor]
-        protected CommandResponse(T data, bool success, string description) : base(success, description)
+        private CommandResponse(T? data, bool success, string description) : base(success, description)
         {
             Data = data;
         }
@@ -58,6 +56,11 @@ namespace SharedKernel
         public static CommandResponse<T> Ok(T data, string description)
         {
             return new CommandResponse<T>(data, true, description);
+        }
+
+        public static CommandResponse<T> Problem(T? data, string description)
+        {
+            return new CommandResponse<T>(data, false, description);
         }
     }
 }

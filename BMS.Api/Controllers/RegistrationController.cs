@@ -17,11 +17,37 @@ public class RegistrationController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost(Name = "CreateCompanyWithUser")]
-    public async Task<IActionResult> Index()
-    {
-        CommandResponse<User> commandResponse = await _mediator.Send(new CreateCompanyWithUserCommand("tst", "email", "pass"));
+    /*
+     * Alternatively could use
+     *
+     * public async Task<IActionResult> Index([FromForm] CreateCompanyWithUserCommand createCommand)
+     *
+     * to hydrate command automatically, but it would require CreateCompanyCommand to have parameterless constructor
+     * and all properties publicly mutable.
+     * This would require more validation on handler side, instead of relying on compiler
+     */
 
-        return Ok(commandResponse.Data);
+    [HttpPost(Name = "CreateCompanyWithUser")]
+    public async Task<IActionResult> Index(
+        [FromForm] string companyName,
+        [FromForm] string userEmail, [FromForm] string password)
+    {
+        CommandResponse<User> commandResponse = await _mediator.Send(
+            new CreateCompanyWithUserCommand(companyName, userEmail, password)
+        );
+
+        if (!commandResponse.Success)
+        {
+            return Problem(commandResponse.Description, null, StatusCodes.Status409Conflict);
+        }
+
+        // shows that data was indeed saved.
+        // Usually can just give it full instance of commandResponse, but json serializer will trip over cyclical
+        // relationship between company
+        return Ok( new {
+            userEmail = commandResponse.Data?.Email,
+            userId = commandResponse.Data?.Guid,
+            companyId = commandResponse.Data?.Guid
+        });
     }
 }

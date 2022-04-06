@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BMS.Company.Data.Migrations
 {
     [DbContext(typeof(CompanyContext))]
-    [Migration("20220406071937_Companies")]
+    [Migration("20220406094858_Companies")]
     partial class Companies
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,10 @@ namespace BMS.Company.Data.Migrations
 
                     b.Property<Guid>("Guid")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -68,7 +72,7 @@ namespace BMS.Company.Data.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("BMS.Company.Domain.User", b =>

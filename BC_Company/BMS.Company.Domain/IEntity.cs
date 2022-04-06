@@ -10,9 +10,8 @@ public interface IEntity
 
 public class Entity : IEntity
 {
-    // [JsonProperty]
-    public Guid Guid { get; protected set; } = Guid.NewGuid();
-    public override bool Equals(object obj)
+    public Guid Guid { get; protected init; } = Guid.NewGuid();
+    public override bool Equals(object? obj)
     {
         return (obj as IEntity)?.Guid == Guid;
     }

@@ -13,6 +13,7 @@ public class CompanyContext : DbContext
     }
 
     public DbSet<Domain.Company> Companies { get; set; }
+    public DbSet<User> Users { get; set; }
 
     [SuppressMessage("ReSharper", "SuggestVarOrType_Elsewhere")]
     protected override void OnModelCreating(ModelBuilder modelBuilder)

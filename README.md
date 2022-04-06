@@ -15,5 +15,6 @@ This way, client can generate commands and queries in a type-compatible format w
 
 ### EfCore connection
 ```
+dotnet ef migrations add Companies --project BC_Company/BMS.Company.Data --startup-project BMS.Api --context CompanyContext
 dotnet ef database update --project BC_Company/BMS.Company.Data --startup-project BMS.Api --context CompanyContext
 ```
