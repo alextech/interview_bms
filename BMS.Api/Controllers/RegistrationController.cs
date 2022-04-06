@@ -47,6 +47,8 @@ public class RegistrationController : Controller
 
         if (!commandResponse.Success)
         {
+            // should inspect type of return state, to see if its system failure or input error.
+            // system failure should return 500
             return Problem(commandResponse.Description, null, StatusCodes.Status409Conflict);
         }
 

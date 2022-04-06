@@ -4,6 +4,7 @@ using BMS.Company.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using SharedKernel;
 
 namespace Bms.Application;
@@ -61,7 +62,27 @@ public class CreateCompanyWithUserCommandHandler : IRequestHandler<CreateCompany
         User newUser = new User(createCommand.UserId, createCommand.UserEmail, newCompany);
         _setPassword(newUser, createCommand);
 
-        await _companyContext.AddRangeAsync(newCompany, newUser);
+        await using (IDbContextTransaction transaction = await _companyContext.Database.BeginTransactionAsync(cancellationToken))
+        {
+            try
+            {
+                await _companyContext.AddAsync(newCompany, cancellationToken);
+                await _companyContext.SaveChangesAsync(cancellationToken);
+
+                await _companyContext.AddAsync(newUser, cancellationToken);
+                await _companyContext.SaveChangesAsync(cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+            }
+            catch
+            {
+                // ideally Problem object could have more detailed status type
+                // so that controller could return different http status code
+                return CommandResponse<User>.Problem(null,
+                    $"Failed inserting user and company in a single transaction."
+                );
+            }
+        }
         await _companyContext.SaveChangesAsync(cancellationToken);
 
         return CommandResponse<User>.Ok(newUser, "Successfully created user");
