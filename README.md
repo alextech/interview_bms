@@ -21,6 +21,9 @@ This is especially useful in Blazor, or anywhere else that runs C# on both clien
 
 This way, client can generate commands and queries in a type-compatible format with the server.
 
+API controller does bare minimum to pass command details to command handler. This ensures no coupling to HTTP request
+for cases when input comes from other places, such as queues or CLI.
+
 ### EfCore connection
 ```
 dotnet ef migrations add Companies --project BC_Company/BMS.Company.Data --startup-project BMS.Api --context CompanyContext
