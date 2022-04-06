@@ -39,9 +39,9 @@ public class RegistrationController : Controller
     {
         CommandResponse<User> commandResponse = await _mediator.Send(
             new CreateCompanyWithUserCommand(
-                Guid.NewGuid(),
+                companyId,
                 companyName,
-                Guid.NewGuid(),
+                userId,
                 userEmail, password)
         );
 
