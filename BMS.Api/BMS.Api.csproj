@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MediatR" Version="10.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.3">
@@ -24,6 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BC_Company\Bms.Company.Application\Bms.Company.Application.csproj" />
       <ProjectReference Include="..\BC_Company\BMS.Company.Data\BMS.Company.Data.csproj" />
     </ItemGroup>
 

@@ -1,8 +1,22 @@
-﻿namespace BMS.Company.Cmd;
+﻿using BMS.Company.Domain;
+using MediatR;
+using SharedKernel;
 
-public class CreateCompanyWithUserCommand
+namespace BMS.Company.Cmd;
+
+public class CreateCompanyWithUserCommand : ICommand<User>
 {
-    public string CompanyName { get; init; }
-    public string UserEmail { get; init; }
-    public string UserPassword { get; init; }
+
+    public string CompanyName { get; }
+    public string UserEmail { get; }
+    public string UserPassword { get; }
+
+    public CreateCompanyWithUserCommand(string companyName, string userEmail, string userPassword)
+    {
+        CompanyName = companyName;
+        UserEmail = userEmail;
+        UserPassword = userPassword;
+    }
+
+
 }

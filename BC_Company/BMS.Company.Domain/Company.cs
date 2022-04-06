@@ -2,10 +2,8 @@
 
 namespace BMS.Company.Domain;
 
-public class Company
+public class Company : Entity
 {
-    public Guid Guid { get; }
-
     public string Name { get; }
 
     private readonly IList<User> _users = new List<User>();

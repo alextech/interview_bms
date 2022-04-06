@@ -1,7 +1,9 @@
+using Bms.Application;
 using BMS.Company.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,8 @@ builder.Services.AddDbContext<CompanyContext>(
         ),
     ServiceLifetime.Scoped
 );
+
+builder.Services.RegisterCompanyApplicationModule();
 
 WebApplication app = builder.Build();
 

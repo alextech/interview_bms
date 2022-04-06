@@ -1,9 +1,7 @@
 ﻿namespace BMS.Company.Domain;
 
-public class User
+public class User : Entity
 {
-    public Guid Guid { get; private set; }
-
     public string Email { get; init; }
 
     public Company Company { get; set; }

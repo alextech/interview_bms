@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BMS.Company.Cmd;
+using BMS.Company.Domain;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using SharedKernel;
 
 namespace BMS.Api.Controllers;
 
@@ -6,9 +10,18 @@ namespace BMS.Api.Controllers;
 [Route("[controller]")]
 public class RegistrationController : Controller
 {
-    [HttpPost(Name = "CreateCompanyWithUser")]
-    public IActionResult Index()
+    private readonly IMediator _mediator;
+
+    public RegistrationController(IMediator mediator)
     {
-        return Ok();
+        _mediator = mediator;
+    }
+
+    [HttpPost(Name = "CreateCompanyWithUser")]
+    public async Task<IActionResult> Index()
+    {
+        CommandResponse<User> commandResponse = await _mediator.Send(new CreateCompanyWithUserCommand("tst", "email", "pass"));
+
+        return Ok(commandResponse.Data);
     }
 }
