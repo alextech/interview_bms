@@ -13,5 +13,6 @@ public class RegisterUserWithCompanyValidator : AbstractValidator<RegisterUserWi
             .WithMessage("User email should not be empty");
         RuleFor(register => register.UserPassword).NotEmpty()
             .WithMessage("Password should not be empty");
+        // if add user repository as dependency to validator, can check uniqueness for user email in a company.
     }
 }
