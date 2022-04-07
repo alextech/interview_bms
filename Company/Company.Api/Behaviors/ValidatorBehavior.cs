@@ -27,9 +27,12 @@ public class ValidatorBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 
             // can write to log
 
+            // newline formatting is not easy to handle by consumer. Should have a convenient list of errors.
+            string validationMessages = failures.Aggregate("\n", (current, failure) => current + (failure.ErrorMessage += "\n"));
             // throwing exceptions for domain errors is not best practice. Should create response types with status details.
             throw new CompanyDomainException(
-                $"Command Validation Errors for type {typeof(TRequest).Name}", new ValidationException("Validation exception", failures));
+                $"Command Validation Errors for type {typeof(TRequest).Name}: {validationMessages}",
+                new ValidationException("Validation exception", failures));
         }
 
         return await next();
