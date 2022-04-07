@@ -1,7 +1,9 @@
 using System.Reflection;
+using Company.Api.Behaviors;
 using Company.Api.Commands;
 using Company.Domain;
 using Company.Infrastructure;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +29,10 @@ builder.Services.AddDbContext<CompanyContext>(
 builder.Services.AddTransient<ICompanyRepository, CompanyRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
 builder.Services.AddTransient<IMediator, Mediator>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
 builder.Services.AddMediatR(new[]
 {
     typeof(RegisterUserWithCompanyHandler).GetTypeInfo().Assembly
