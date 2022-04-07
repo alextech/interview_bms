@@ -29,6 +29,7 @@ public class CompanyRepository : ICompanyRepository
     {
         return await (
             from c in _context.Companies
+                .TagWith("CompanyRepository: fetching company by name.")
             where c.Name == name
             select c
         ).SingleOrDefaultAsync(cancellationToken);
