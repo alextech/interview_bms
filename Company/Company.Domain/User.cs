@@ -11,6 +11,9 @@ namespace Company.Domain;
 public class User : Entity, IAggregateRoot
 {
     public string Email { get; private set; }
+
+    public string Password { get; set; }
+
     public Company Company { get; private set; }
 
 

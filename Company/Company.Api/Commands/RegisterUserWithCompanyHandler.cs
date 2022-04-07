@@ -1,5 +1,6 @@
 ﻿using Company.Domain;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace Company.Api.Commands;
 
@@ -34,6 +35,8 @@ public class RegisterUserWithCompanyHandler : IRequestHandler<RegisterUserWithCo
         }
 
         User user = new User(registerCommand.UserEmail, company);
+        _setPassword(user, registerCommand);
+
         _userRepository.Add(user);
 
         try
@@ -47,6 +50,12 @@ public class RegisterUserWithCompanyHandler : IRequestHandler<RegisterUserWithCo
         }
 
         return true;
+    }
+
+    private static void _setPassword(User user, RegisterUserWithCompany registerCommand)
+    {
+        PasswordHasher<User> passwordHasher = new PasswordHasher<User>();
+        user.Password = passwordHasher.HashPassword(user, registerCommand.UserPassword);
     }
 }
 

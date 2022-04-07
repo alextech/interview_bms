@@ -27,13 +27,9 @@ public class CompanyContext : DbContext, IUnitOfWork
         // ============== USER ==================
         EntityTypeBuilder<User> userEntity = modelBuilder
             .Entity<User>();
-        userEntity.Property<int>("Id")
-            .ValueGeneratedOnAdd();
-        userEntity.HasKey("Id");
 
         userEntity
-            .HasIndex(u => u.Email)
-            .IsUnique();
+            .HasIndex(u => u.Email);
 
     }
 

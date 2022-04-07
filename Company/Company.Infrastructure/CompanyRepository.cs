@@ -6,7 +6,7 @@ namespace Company.Infrastructure;
 
 public class CompanyRepository : ICompanyRepository
 {
-    private CompanyContext _context;
+    private readonly CompanyContext _context;
     public IUnitOfWork UnitOfWork => _context;
 
     public CompanyRepository(CompanyContext companyContext)
